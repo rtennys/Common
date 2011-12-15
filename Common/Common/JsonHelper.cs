@@ -9,12 +9,12 @@ namespace Common
 {
     public static class JsonHelper
     {
-        public static string ToJson(object source)
+        public static string SerializeJson(this object source)
         {
             return new JavaScriptSerializer().Serialize(source);
         }
 
-        public static T FromJson<T>(string json)
+        public static T DeserializeJson<T>(this string json)
         {
             var javaScriptSerializer = new JavaScriptSerializer();
             if (typeof(T) == typeof(object))

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.IO;
@@ -51,6 +52,18 @@ namespace Common
                 .Where(x => !(x is string) || !string.IsNullOrEmpty(x.As<string>()));
         }
 
+        public static IEnumerable<T> AsReadOnly<T>(this IEnumerable<T> source)
+        {
+            if (source is ReadOnlyCollection<T>)
+                return source;
+
+            var list = source as IList<T>;
+            if (list != null)
+                return new ReadOnlyCollection<T>(list);
+
+            return source.ToList().AsReadOnly();
+        }
+
         public static IEnumerable<T> Each<T>(this IEnumerable<T> source, Action<T> action)
         {
             if (source != null && source is ICollection)
@@ -67,7 +80,6 @@ namespace Common
                     action(item);
                     return item;
                 })
-                .ToList()
                 .AsReadOnly();
         }
 
@@ -88,7 +100,6 @@ namespace Common
                     action(item, index);
                     return item;
                 })
-                .ToList()
                 .AsReadOnly();
         }
 
