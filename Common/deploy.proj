@@ -7,14 +7,13 @@
         <NamespaceToReplace>Common</NamespaceToReplace>
         <NuspecFilename>Common.nuspec</NuspecFilename>
         <NuGetTempDirectory>nuget-temp</NuGetTempDirectory>
-        <NuGetRepoDirectory>D:\dev\nuget-repo</NuGetRepoDirectory>
         <MSBuildCommunityTasksPath>.</MSBuildCommunityTasksPath>
     </PropertyGroup>
 
     <Import Project="msbuild\MSBuild.Community.Tasks.Targets" />
 
 
-    <Target Name="Deploy" DependsOnTargets="BuildProject;GrabVersion;PrepareForNuGet;CallNuGet;CleanSolution;OpenExplorer;" />
+    <Target Name="Deploy" DependsOnTargets="BuildProject;GrabVersion;PrepareForNuGet;CallNuGet;CleanSolution;" />
 
 
     <Target Name="BuildProject">
@@ -47,18 +46,17 @@
 
 
     <Target Name="CallNuGet">
-        <Exec Command='.nuget\NuGet pack $(NuspecFilename) -Verbose -BasePath "$(NuGetTempDirectory)" -Version "$(Version)" -OutputDirectory "$(NuGetRepoDirectory)"' />
+        <Exec Command='.nuget\NuGet pack $(NuspecFilename) -Verbose -BasePath "$(NuGetTempDirectory)" -Version "$(Version)" -OutputDirectory "$(NuGetTempDirectory)"' />
+        <ItemGroup>
+            <packageName Include="$(NuGetTempDirectory)\*.nupkg" />
+        </ItemGroup>
+        <Exec Command='.nuget\NuGet push "@(packageName)"' />
         <RemoveDir Directories="$(NuGetTempDirectory)" />
     </Target>
 
 
     <Target Name="CleanSolution">
         <MSBuild Projects="$(ProjectFile)" Targets="clean" Properties="Configuration=Release;TrickTheCache=1;" />
-    </Target>
-
-
-    <Target Name="OpenExplorer">
-        <Exec Command='explorer.exe "$(NuGetRepoDirectory)"' IgnoreExitCode="true" />
     </Target>
 
 </Project>

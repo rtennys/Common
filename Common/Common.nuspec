@@ -4,20 +4,21 @@
         <id>RobTennyson.Common</id>
         <summary>Rob Tennyson's Common Stuff</summary>
         <version>1.0</version>
-        <authors>https://github.com/rtennys</authors>
-        <owners>https://github.com/rtennys</owners>
+        <authors>rtennys</authors>
+        <owners>rtennys</owners>
         <projectUrl>https://github.com/rtennys/Common</projectUrl>
-        <iconUrl>https://secure.gravatar.com/avatar/b40b81a7927879a463f91a1074fea98a?s=140</iconUrl>
-        <tags>.net c#</tags>
-        <description>
-            The utility classes and extension methods I tend to pull along with me as I move from
-            project to project. I basically got tired of re-writing them. Also as they slowly morphed, I wouldn't
-            be sure which past project I should refer to when I was starting a new project (to make sure I got
-            the latest and greatest). This package will hopefully solve that problem!
-        </description>
+        <iconUrl>https://secure.gravatar.com/avatar/b40b81a7927879a463f91a1074fea98a?s=32</iconUrl>
+        <tags>.net c# personal</tags>
         <frameworkAssemblies>
             <frameworkAssembly assemblyName="System.ComponentModel.DataAnnotations" />
+            <frameworkAssembly assemblyName="System.Web" />
+            <frameworkAssembly assemblyName="System.Web.Extensions" />
             <frameworkAssembly assemblyName="System.XML" />
         </frameworkAssemblies>
+        <description>
+            The utility classes and extension methods I tend to pull along with me as I move from project to project. I basically got tired of re-writing them. Also as they slowly morphed, I wouldn't be sure which past project I should refer to when I was starting a new project (to make sure I got the latest and greatest). This package will hopefully solve that problem!
+
+            Keep in mind that I created this with me in mind. The contents are subject to change on a whim and without notice. If you have a project with this included, it's more than likely because I was a consultant for you (or your employer). Update with care!
+        </description>
     </metadata>
 </package>

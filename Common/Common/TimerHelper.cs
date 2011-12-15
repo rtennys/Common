@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
 
-namespace Common.Helpers
+namespace Common
 {
     public static class TimerHelper
     {
