@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Cryptography;
 using System.Text;
@@ -359,5 +360,12 @@ namespace Common
             var displayAttr = member.GetCustomAttributes(false).OfType<DisplayAttribute>().FirstOrDefault();
             return displayAttr != null ? displayAttr.GetName() : member.Name;
         }
+
+        public static Boolean IsAnonymous(this Type type)
+        {
+            return
+                type.GetCustomAttributes(typeof(CompilerGeneratedAttribute), false).Count() > 0 &&
+                type.FullName.Contains("AnonymousType");
+        } 
     }
 }
