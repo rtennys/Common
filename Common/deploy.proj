@@ -8,20 +8,18 @@
         <NuspecFilename>Common.nuspec</NuspecFilename>
         <NuGetTempDirectory>nuget-temp</NuGetTempDirectory>
         <MSBuildCommunityTasksPath>.</MSBuildCommunityTasksPath>
+        <SkipDeployAndCleanup>false</SkipDeployAndCleanup>
     </PropertyGroup>
 
     <Import Project="msbuild\MSBuild.Community.Tasks.Targets" />
 
-
-    <Target Name="Deploy" DependsOnTargets="BuildProject;GrabVersion;PrepareForNuGet;CallNuGet;CleanSolution;" />
-
+    <Target Name="Deploy" DependsOnTargets="BuildProject;GrabVersion;PrepareForNuGet;CreateNuGetPackage;DeployNuGetPackage;Cleanup;" />
 
     <Target Name="BuildProject">
         <MSBuild Projects="$(ProjectFile)" Targets="clean;build" Properties="Configuration=Release">
             <Output TaskParameter="TargetOutputs" PropertyName="TargetPath" />
         </MSBuild>
     </Target>
-
 
     <Target Name="GrabVersion">
         <GetAssemblyIdentity AssemblyFiles="$(TargetPath)">
@@ -32,7 +30,6 @@
         </CreateProperty>
     </Target>
 
-
     <Target Name="PrepareForNuGet">
         <ItemGroup>
             <sourceFiles Include="$(ProjectFolder)\**\*.cs" Exclude="**\AssemblyInfo.cs" />
@@ -41,21 +38,23 @@
             <destinationFiles Include="@(sourceFiles->'$(NuGetTempDirectory)\content\$(NamespaceToReplace)\%(RecursiveDir)%(Filename)%(Extension).pp')" />
         </ItemGroup>
         <Copy SourceFiles="@(sourceFiles)" DestinationFiles="@(destinationFiles)" />
-        <FileUpdate Files="@(destinationFiles)" Regex="namespace $(NamespaceToReplace)" ReplacementText="namespace $rootnamespace$" />
+        <FileUpdate Files="@(destinationFiles)" Regex="namespace $(NamespaceToReplace)" ReplacementText="namespace $rootnamespace$.$(NamespaceToReplace)" />
+        <Copy SourceFiles="$(ProjectFolder)\_README.txt" DestinationFolder="$(NuGetTempDirectory)\content\$(NamespaceToReplace)" />
     </Target>
 
-
-    <Target Name="CallNuGet">
+    <Target Name="CreateNuGetPackage">
         <Exec Command='.nuget\NuGet pack $(NuspecFilename) -Verbose -BasePath "$(NuGetTempDirectory)" -Version "$(Version)" -OutputDirectory "$(NuGetTempDirectory)"' />
+    </Target>
+
+    <Target Name="DeployNuGetPackage" Condition="!$(SkipDeployAndCleanup)">
         <ItemGroup>
             <packageName Include="$(NuGetTempDirectory)\*.nupkg" />
         </ItemGroup>
         <Exec Command='.nuget\NuGet push "@(packageName)"' />
-        <RemoveDir Directories="$(NuGetTempDirectory)" />
     </Target>
 
-
-    <Target Name="CleanSolution">
+    <Target Name="Cleanup" Condition="!$(SkipDeployAndCleanup)">
+        <RemoveDir Directories="$(NuGetTempDirectory)" />
         <MSBuild Projects="$(ProjectFile)" Targets="clean" Properties="Configuration=Release;TrickTheCache=1;" />
     </Target>
 
