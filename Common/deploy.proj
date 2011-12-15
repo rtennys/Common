@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Deploy" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <PropertyGroup>
+        <ProjectFolder>Common</ProjectFolder>
+        <ProjectFile>$(ProjectFolder)\Common.csproj</ProjectFile>
+        <NamespaceToReplace>Common</NamespaceToReplace>
+        <NuspecFilename>Common.nuspec</NuspecFilename>
+        <NuGetTempDirectory>nuget-temp</NuGetTempDirectory>
+        <NuGetRepoDirectory>D:\dev\nuget-repo</NuGetRepoDirectory>
+        <MSBuildCommunityTasksPath>.</MSBuildCommunityTasksPath>
+    </PropertyGroup>
+
+    <Import Project="msbuild\MSBuild.Community.Tasks.Targets" />
+
+
+    <Target Name="Deploy" DependsOnTargets="BuildProject;GrabVersion;PrepareForNuGet;CallNuGet;CleanSolution;OpenExplorer;" />
+
+
+    <Target Name="BuildProject">
+        <MSBuild Projects="$(ProjectFile)" Targets="clean;build" Properties="Configuration=Release">
+            <Output TaskParameter="TargetOutputs" PropertyName="TargetPath" />
+        </MSBuild>
+    </Target>
+
+
+    <Target Name="GrabVersion">
+        <GetAssemblyIdentity AssemblyFiles="$(TargetPath)">
+            <Output TaskParameter="Assemblies" ItemName="GetVersionAssemblyInfo"/>
+        </GetAssemblyIdentity>
+        <CreateProperty Value="%(GetVersionAssemblyInfo.Version)">
+            <Output TaskParameter="Value" PropertyName="Version" />
+        </CreateProperty>
+    </Target>
+
+
+    <Target Name="PrepareForNuGet">
+        <ItemGroup>
+            <sourceFiles Include="$(ProjectFolder)\**\*.cs" Exclude="**\AssemblyInfo.cs" />
+        </ItemGroup>
+        <ItemGroup>
+            <destinationFiles Include="@(sourceFiles->'$(NuGetTempDirectory)\content\$(NamespaceToReplace)\%(RecursiveDir)%(Filename)%(Extension).pp')" />
+        </ItemGroup>
+        <Copy SourceFiles="@(sourceFiles)" DestinationFiles="@(destinationFiles)" />
+        <FileUpdate Files="@(destinationFiles)" Regex="namespace $(NamespaceToReplace)" ReplacementText="namespace $rootnamespace$" />
+    </Target>
+
+
+    <Target Name="CallNuGet">
+        <Exec Command='.nuget\NuGet pack $(NuspecFilename) -Verbose -BasePath "$(NuGetTempDirectory)" -Version "$(Version)" -OutputDirectory "$(NuGetRepoDirectory)"' />
+        <RemoveDir Directories="$(NuGetTempDirectory)" />
+    </Target>
+
+
+    <Target Name="CleanSolution">
+        <MSBuild Projects="$(ProjectFile)" Targets="clean" Properties="Configuration=Release;TrickTheCache=1;" />
+    </Target>
+
+
+    <Target Name="OpenExplorer">
+        <Exec Command='explorer.exe "$(NuGetRepoDirectory)"' IgnoreExitCode="true" />
+    </Target>
+
+</Project>
