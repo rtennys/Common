@@ -45,7 +45,9 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataAccess\Entities.cs" />
     <Compile Include="DataAccess\FileRepository.cs" />
+    <Compile Include="DataAccess\IdGenerator.cs" />
     <Compile Include="DataAccess\InMemoryRepository.cs" />
     <Compile Include="DataAccess\JsonRepository.cs" />
     <Compile Include="DataAccess\XmlRepository.cs" />

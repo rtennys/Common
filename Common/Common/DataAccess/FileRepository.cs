@@ -8,7 +8,12 @@ namespace Common.DataAccess
 {
     public abstract class FileRepository : IRepository
     {
-        public T Get<T>(int id) where T : IEntity
+        public T Load<T>(object id) where T : IEntity
+        {
+            return Get<T>(id);
+        }
+
+        public T Get<T>(object id) where T : IEntity
         {
             var path = GetPath<T>(id);
             return !File.Exists(path) ? default(T) : Read<T>(path);
@@ -37,6 +42,7 @@ namespace Common.DataAccess
 
         public T Add<T>(T entity) where T : IEntity
         {
+            IdGenerator.SetId(entity);
             Write(GetPath<T>(entity.Id), entity);
             return entity;
         }
@@ -54,10 +60,7 @@ namespace Common.DataAccess
         protected abstract void Write<T>(string path, T entity);
         protected abstract T Read<T>(string path);
 
-        /**********************************************************************/
-        /**********************************************************************/
-
-        private string GetPath<T>(int id)
+        private string GetPath<T>(object id)
         {
             var directoryName = GetDirectoryName<T>();
             var fileName = id.ToString();

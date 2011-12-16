@@ -377,6 +377,6 @@ namespace Common
             return
                 type.GetCustomAttributes(typeof(CompilerGeneratedAttribute), false).Count() > 0 &&
                 type.FullName.Contains("AnonymousType");
-        } 
+        }
     }
 }
