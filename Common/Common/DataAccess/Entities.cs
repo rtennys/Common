@@ -23,7 +23,7 @@ namespace Common.DataAccess
 
         public virtual object Id { get; protected set; }
 
-        public bool Equals(Entity other)
+        public virtual bool Equals(Entity other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -45,6 +45,11 @@ namespace Common.DataAccess
 
     public abstract class Entity<PK> : Entity
     {
+        protected Entity()
+        {
+            Id = default(PK);
+        }
+
         public new virtual PK Id
         {
             get { return (PK)base.Id; }
