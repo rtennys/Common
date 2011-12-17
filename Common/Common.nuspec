@@ -4,11 +4,12 @@
         <id>RobTennyson.Common</id>
         <summary>Rob Tennyson's Common Stuff</summary>
         <version>1.0</version>
-        <authors>rtennys</authors>
-        <owners>rtennys</owners>
+        <authors>Rob Tennyson</authors>
+        <owners>Rob Tennyson</owners>
         <projectUrl>https://github.com/rtennys/Common</projectUrl>
         <iconUrl>https://secure.gravatar.com/avatar/b40b81a7927879a463f91a1074fea98a?s=32</iconUrl>
-        <tags>.net c# personal</tags>
+        <licenseUrl>http://en.wikipedia.org/wiki/Public_Domain</licenseUrl>
+        <tags>.net c# personal public-domain</tags>
         <frameworkAssemblies>
             <frameworkAssembly assemblyName="System.ComponentModel.DataAnnotations" />
             <frameworkAssembly assemblyName="System.Web" />
