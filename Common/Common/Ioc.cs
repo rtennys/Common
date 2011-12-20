@@ -5,14 +5,12 @@ namespace Common
 {
     public static class Ioc
     {
-        public static IServiceLocator CurrentLocator
-        {
-            get { return ServiceLocator.Current; }
-        }
+        public static IServiceLocator CurrentLocator { get; private set; }
 
         public static IServiceLocator Initialize(IServiceLocator serviceLocator)
         {
-            ServiceLocator.SetLocatorProvider(() => serviceLocator);
+            CurrentLocator = serviceLocator;
+            ServiceLocator.SetLocatorProvider(() => CurrentLocator);
             return serviceLocator;
         }
 
