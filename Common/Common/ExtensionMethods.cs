@@ -211,33 +211,22 @@ namespace Common
 
         public static dynamic ToDynamic(this object source)
         {
-            if (source is ExpandoObject) return source;
+            if (source == null || source is ExpandoObject || source is string || source.GetType().IsPrimitive)
+                return source;
 
-            var map = new Dictionary<string, object>();
+            var list = source as IList;
+            if (list != null)
+                return list.Cast<object>().Select(x => x.ToDynamic()).AsReadOnly();
+
+            IDictionary<string, object> expando = new ExpandoObject();
 
             var dictionary = source as IDictionary;
             if (dictionary != null)
                 foreach (DictionaryEntry entry in dictionary)
-                    map.Add(entry.Key.ToString(), entry.Value);
+                    expando.Add(entry.Key.ToString(), entry.Value.ToDynamic());
             else
                 foreach (PropertyDescriptor descriptor in TypeDescriptor.GetProperties(source))
-                    map.Add(descriptor.Name, descriptor.GetValue(source));
-
-            IDictionary<string, object> expando = new ExpandoObject();
-
-            foreach (var entry in map)
-            {
-                var value = entry.Value;
-
-                if (value != null)
-                {
-                    var type = value.GetType();
-                    if (type == typeof(object) || type.IsAnonymous())
-                        value = value.ToDynamic();
-                }
-
-                expando.Add(entry.Key, value);
-            }
+                    expando.Add(descriptor.Name, descriptor.GetValue(source).ToDynamic());
 
             return expando;
         }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Dynamic;
 using NUnit.Framework;
 
@@ -30,8 +31,48 @@ namespace Common.Tests.ExtensionMethods
             var sut = new TestClass1 {Property = new TestClass2 {Property = "test"}}.ToDynamic();
 
             Assert.IsInstanceOf<ExpandoObject>(sut);
-            Assert.IsInstanceOf<TestClass2>(sut.Property);
+            Assert.IsInstanceOf<ExpandoObject>(sut.Property);
             Assert.AreEqual("test", sut.Property.Property);
+        }
+
+        [Test]
+        public void Can_create_with_arrays()
+        {
+            // Arrange
+            var input = new[] {1, 2, 3};
+
+            // Act
+            var sut = input.ToDynamic();
+
+            // Assert
+            Assert.IsInstanceOf<IEnumerable<dynamic>>(sut);
+            Assert.AreEqual(3, sut.Count);
+            Assert.AreEqual(1, sut[0]);
+        }
+
+        [Test]
+        public void Can_create_with_anonymous_objects_containing_arrays()
+        {
+            // Arrange
+            var input = new
+                {
+                    Property = "test",
+                    Array = new[]
+                        {
+                            new {Property = 1},
+                            new {Property = 2},
+                            new {Property = 3},
+                        }
+                };
+
+            // Act
+            var sut = input.ToDynamic();
+
+            // Assert
+            Assert.IsInstanceOf<ExpandoObject>(sut);
+            Assert.IsInstanceOf<IEnumerable<dynamic>>(sut.Array);
+            Assert.AreEqual(3, sut.Array.Count);
+            Assert.AreEqual(1, sut.Array[0].Property);
         }
 
         private class TestClass1
