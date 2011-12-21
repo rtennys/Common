@@ -45,14 +45,9 @@ namespace Common.DataAccess
 
     public abstract class Entity<PK> : Entity
     {
-        protected Entity()
-        {
-            Id = default(PK);
-        }
-
         public new virtual PK Id
         {
-            get { return (PK)base.Id; }
+            get { return base.Id == null ? default(PK) : (PK)base.Id; }
             protected set { base.Id = value; }
         }
     }

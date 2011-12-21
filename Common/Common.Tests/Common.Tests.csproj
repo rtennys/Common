@@ -46,6 +46,7 @@
       <HintPath>..\packages\RhinoMocks.3.6\lib\Rhino.Mocks.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
@@ -53,6 +54,7 @@
     <Compile Include="DataAccess\IdGeneratorTests.cs" />
     <Compile Include="DataAccess\InMemoryRepositoryTests.cs" />
     <Compile Include="ExtensionMethods\EachTests.cs" />
+    <Compile Include="ExtensionMethods\GetDisplayNameTests.cs" />
     <Compile Include="ExtensionMethods\ToDynamicTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

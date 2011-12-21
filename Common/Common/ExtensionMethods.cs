@@ -407,6 +407,11 @@ namespace Common
             return displayAttr != null ? displayAttr.GetName() : member.Name;
         }
 
+        public static string GetDisplayName(this Enum value)
+        {
+            return value.GetType().GetMember(value.ToString())[0].GetDisplayName();
+        }
+
         public static Boolean IsAnonymous(this Type type)
         {
             return
