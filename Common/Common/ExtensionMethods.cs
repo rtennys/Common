@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Dynamic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -205,6 +207,39 @@ namespace Common
         public static string ToTitleCase(this string source)
         {
             return Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(source.Replace('-', ' '));
+        }
+
+        public static dynamic ToDynamic(this object source)
+        {
+            if (source is ExpandoObject) return source;
+
+            var map = new Dictionary<string, object>();
+
+            var dictionary = source as IDictionary;
+            if (dictionary != null)
+                foreach (DictionaryEntry entry in dictionary)
+                    map.Add(entry.Key.ToString(), entry.Value);
+            else
+                foreach (PropertyDescriptor descriptor in TypeDescriptor.GetProperties(source))
+                    map.Add(descriptor.Name, descriptor.GetValue(source));
+
+            IDictionary<string, object> expando = new ExpandoObject();
+
+            foreach (var entry in map)
+            {
+                var value = entry.Value;
+
+                if (value != null)
+                {
+                    var type = value.GetType();
+                    if (type == typeof(object) || type.IsAnonymous())
+                        value = value.ToDynamic();
+                }
+
+                expando.Add(entry.Key, value);
+            }
+
+            return expando;
         }
 
 

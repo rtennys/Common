@@ -53,6 +53,7 @@
     <Compile Include="DataAccess\IdGeneratorTests.cs" />
     <Compile Include="DataAccess\InMemoryRepositoryTests.cs" />
     <Compile Include="ExtensionMethods\EachTests.cs" />
+    <Compile Include="ExtensionMethods\ToDynamicTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
