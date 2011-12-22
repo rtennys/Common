@@ -4,19 +4,32 @@ namespace Common
 {
     public static class EnumHelper
     {
-        public static string[] GetNames<T>()
+        public static string[] GetNames<TEnum>() where TEnum : struct
         {
-            return Enum.GetNames(typeof(T));
+            return Enum.GetNames(typeof(TEnum));
         }
 
-        public static T[] GetValues<T>()
+        public static TEnum[] GetValues<TEnum>() where TEnum : struct
         {
-            return Enum.GetValues(typeof(T)).As<T[]>();
+            return Enum.GetValues(typeof(TEnum)).As<TEnum[]>();
         }
 
-        public static T Parse<T>(string value)
+        public static TEnum Parse<TEnum>(string value) where TEnum : struct
         {
-            return (T)Enum.Parse(typeof(T), value, true);
+            return (TEnum)Enum.Parse(typeof(TEnum), value, true);
+        }
+
+        /// <summary>If value is one of the enum values, it is returned un-modified. Otherwise an empty string is returned.</summary>
+        public static string Validate<TEnum>(string value) where TEnum : struct
+        {
+            return Validate<TEnum>(value, "");
+        }
+
+        /// <summary>If value is one of the enum values, it is returned un-modified. Otherwise defaultResult is returned.</summary>
+        public static string Validate<TEnum>(string value, string defaultResult) where TEnum : struct
+        {
+            TEnum result;
+            return Enum.TryParse(value, true, out result) ? value : defaultResult;
         }
     }
 }
