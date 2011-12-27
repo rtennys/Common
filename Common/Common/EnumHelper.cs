@@ -32,19 +32,10 @@ namespace Common
             return Enum.TryParse(value, true, out result) ? value : defaultResult;
         }
 
-        public static bool IsDefined<TEnum>(object value) where TEnum : struct
+        public static bool IsDefined<TEnum>(string value) where TEnum : struct
         {
-            if (value == null)
-                return false;
-
-            try
-            {
-                return Enum.IsDefined(typeof(TEnum), value);
-            }
-            catch
-            {
-                return false;
-            }
+            TEnum result;
+            return Enum.TryParse(value, true, out result);
         }
     }
 }
