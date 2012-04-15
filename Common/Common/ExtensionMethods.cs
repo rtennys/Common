@@ -54,25 +54,27 @@ namespace Common
                 .Where(x => !(x is string) || !string.IsNullOrEmpty(x.As<string>()));
         }
 
-        public static IEnumerable<T> AsReadOnly<T>(this IEnumerable<T> source)
+        public static IList<T> AsReadOnly<T>(this IEnumerable<T> source)
         {
-            if (source is ReadOnlyCollection<T>)
-                return source;
+            IList<T> list = source as ReadOnlyCollection<T>;
+            if (list != null)
+                return list;
 
-            var list = source as IList<T>;
+            list = source as IList<T>;
             if (list != null)
                 return new ReadOnlyCollection<T>(list);
 
             return source.ToList().AsReadOnly();
         }
 
-        public static IEnumerable<T> Each<T>(this IEnumerable<T> source, Action<T> action)
+        public static ICollection<T> Each<T>(this IEnumerable<T> source, Action<T> action)
         {
-            if (source != null && source is ICollection)
+            var collection = source as ICollection<T>;
+            if (collection != null)
             {
                 foreach (var obj in source)
                     action(obj);
-                return source;
+                return collection;
             }
 
             return source
@@ -85,14 +87,14 @@ namespace Common
                 .AsReadOnly();
         }
 
-        public static IEnumerable<T> Each<T>(this IEnumerable<T> source, Action<T, int> action)
+        public static IList<T> Each<T>(this IEnumerable<T> source, Action<T, int> action)
         {
             var list = source as IList<T>;
             if (list != null)
             {
                 for (var i = 0; i < list.Count; i++)
                     action(list[i], i);
-                return source;
+                return list;
             }
 
             return source
@@ -357,7 +359,7 @@ namespace Common
         {
             source = source.NullCheck();
             if (!(source is IList<T>))
-                source = source.ToList().AsReadOnly();
+                source = source.AsReadOnly();
 
             var propertyInfos = typeof(T).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 
@@ -404,7 +406,7 @@ namespace Common
         public static Boolean IsAnonymous(this Type type)
         {
             return
-                type.GetCustomAttributes(typeof(CompilerGeneratedAttribute), false).Count() > 0 &&
+                type.GetCustomAttributes(typeof(CompilerGeneratedAttribute), false).Any() &&
                 type.FullName.Contains("AnonymousType");
         }
     }
