@@ -60,11 +60,9 @@ namespace Common
             if (list != null)
                 return list;
 
-            list = source as IList<T>;
-            if (list != null)
-                return new ReadOnlyCollection<T>(list);
+            list = (source as IList<T>) ?? source.NullCheck().ToArray();
 
-            return source.ToList().AsReadOnly();
+            return new ReadOnlyCollection<T>(list);
         }
 
         public static ICollection<T> Each<T>(this IEnumerable<T> source, Action<T> action)
