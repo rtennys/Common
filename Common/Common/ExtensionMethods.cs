@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Dynamic;
@@ -54,18 +53,7 @@ namespace Common
                 .Where(x => !(x is string) || !string.IsNullOrEmpty(x.As<string>()));
         }
 
-        public static IList<T> AsReadOnly<T>(this IEnumerable<T> source)
-        {
-            IList<T> list = source as ReadOnlyCollection<T>;
-            if (list != null)
-                return list;
-
-            list = (source as IList<T>) ?? source.NullCheck().ToArray();
-
-            return new ReadOnlyCollection<T>(list);
-        }
-
-        public static ICollection<T> Each<T>(this IEnumerable<T> source, Action<T> action)
+        public static IEnumerable<T> Each<T>(this IEnumerable<T> source, Action<T> action)
         {
             var collection = source as ICollection<T>;
             if (collection != null)
@@ -85,7 +73,7 @@ namespace Common
                 .AsReadOnly();
         }
 
-        public static IList<T> Each<T>(this IEnumerable<T> source, Action<T, int> action)
+        public static IEnumerable<T> Each<T>(this IEnumerable<T> source, Action<T, int> action)
         {
             var list = source as IList<T>;
             if (list != null)
