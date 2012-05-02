@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Dynamic;
@@ -53,15 +54,33 @@ namespace Common
                 .Where(x => !(x is string) || !string.IsNullOrEmpty(x.As<string>()));
         }
 
+        public static ReadOnlyCollection<T> AsReadOnly<T>(this IEnumerable<T> source)
+        {
+            var readOnly = source as ReadOnlyCollection<T>;
+            if (readOnly != null)
+                return readOnly;
+
+            var list = source as IList<T> ?? source.NullCheck().ToArray();
+
+            return new ReadOnlyCollection<T>(list);
+        }
+
+        public static IList<T> Each<T>(this IList<T> source, Action<T> action)
+        {
+            foreach (var obj in source) action(obj);
+            return source;
+        }
+
+        public static ICollection<T> Each<T>(this ICollection<T> source, Action<T> action)
+        {
+            foreach (var obj in source) action(obj);
+            return source;
+        }
+
         public static IEnumerable<T> Each<T>(this IEnumerable<T> source, Action<T> action)
         {
             var collection = source as ICollection<T>;
-            if (collection != null)
-            {
-                foreach (var obj in source)
-                    action(obj);
-                return collection;
-            }
+            if (collection != null) return Each(collection, action);
 
             return source
                 .NullCheck()
@@ -73,15 +92,16 @@ namespace Common
                 .AsReadOnly();
         }
 
+        public static IList<T> Each<T>(this IList<T> source, Action<T, int> action)
+        {
+            for (var i = 0; i < source.Count; i++) action(source[i], i);
+            return source;
+        }
+
         public static IEnumerable<T> Each<T>(this IEnumerable<T> source, Action<T, int> action)
         {
             var list = source as IList<T>;
-            if (list != null)
-            {
-                for (var i = 0; i < list.Count; i++)
-                    action(list[i], i);
-                return list;
-            }
+            if (list != null) return Each(list, action);
 
             return source
                 .NullCheck()

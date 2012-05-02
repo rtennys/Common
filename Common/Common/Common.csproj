@@ -56,7 +56,6 @@
     <Compile Include="ExpressionHelper.cs" />
     <Compile Include="Ioc.cs" />
     <Compile Include="DataAccess\IRepository.cs" />
-    <Compile Include="ReadOnlyList.cs" />
     <Compile Include="JsonHelper.cs" />
     <Compile Include="TimerHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
