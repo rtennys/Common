@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace Common.DataAccess
 {
@@ -44,6 +43,11 @@ namespace Common.DataAccess
         {
             DataStore.ListFor<T>().Remove(entity);
             return entity;
+        }
+
+        public void Remove<T>(object id) where T : IEntity
+        {
+            Remove(Get<T>(id));
         }
 
         public static class DataStore

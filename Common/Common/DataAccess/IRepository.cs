@@ -23,5 +23,6 @@ namespace Common.DataAccess
 
         T Add<T>(T entity) where T : IEntity;
         T Remove<T>(T entity) where T : IEntity;
+        void Remove<T>(object id) where T : IEntity;
     }
 }

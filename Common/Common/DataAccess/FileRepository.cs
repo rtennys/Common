@@ -49,12 +49,14 @@ namespace Common.DataAccess
 
         public T Remove<T>(T entity) where T : IEntity
         {
-            var path = GetPath<T>(entity.Id);
-
-            if (File.Exists(path))
-                File.Delete(path);
-
+            Remove<T>(entity.Id);
             return entity;
+        }
+
+        public void Remove<T>(object id) where T : IEntity
+        {
+            var path = GetPath<T>(id);
+            if (File.Exists(path)) File.Delete(path);
         }
 
         protected abstract void Write<T>(string path, T entity);
