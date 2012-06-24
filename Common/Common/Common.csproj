@@ -49,6 +49,7 @@
     <Compile Include="DataAccess\FileRepository.cs" />
     <Compile Include="DataAccess\IdGenerator.cs" />
     <Compile Include="DataAccess\InMemoryRepository.cs" />
+    <Compile Include="DataAccess\IUnitOfWork.cs" />
     <Compile Include="DataAccess\JsonRepository.cs" />
     <Compile Include="DataAccess\XmlRepository.cs" />
     <Compile Include="ExtensionMethods.cs" />
