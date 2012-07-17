@@ -52,6 +52,7 @@
     <Compile Include="DataAccess\IUnitOfWork.cs" />
     <Compile Include="DataAccess\JsonRepository.cs" />
     <Compile Include="DataAccess\XmlRepository.cs" />
+    <Compile Include="DateExtensionMethods.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="EnumHelper.cs" />
     <Compile Include="ExpressionHelper.cs" />
