@@ -93,5 +93,30 @@ namespace Common
         {
             return date.Kind == kind ? date : new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, date.Millisecond, kind);
         }
+
+
+        public static string ToRelativeString(this DateTimeOffset date)
+        {
+            var timeSpan = DateTimeOffset.UtcNow.Subtract(date);
+            if (timeSpan.TotalMinutes < 1) return "just now";
+            if (timeSpan.TotalMinutes < 2) return "1 minute ago";
+            if (timeSpan.TotalMinutes < 60) return string.Format("{0} minutes ago", timeSpan.Minutes);
+            if (timeSpan.TotalMinutes < 120) return "1 hour ago";
+            if (timeSpan.TotalHours < 24) return string.Format("{0} hours ago", timeSpan.Hours);
+            if (timeSpan.TotalDays < 2) return "yesterday";
+            if (timeSpan.TotalDays < 7) return string.Format("{0} days ago", timeSpan.Days);
+            if (timeSpan.TotalDays < 14) return "last week";
+            if (timeSpan.TotalDays < 21) return "2 weeks ago";
+            if (timeSpan.TotalDays < 28) return "3 weeks ago";
+            if (timeSpan.TotalDays < 60) return "last month";
+            if (timeSpan.TotalDays < 365) return string.Format("{0} months ago", Math.Round(timeSpan.TotalDays / 30));
+            if (timeSpan.TotalDays < 730) return "last year";
+            return string.Format("{0} years ago", Math.Round(timeSpan.TotalDays / 365));
+        }
+
+        public static string ToRelativeString(this DateTime date)
+        {
+            return new DateTimeOffset(date).ToRelativeString();
+        }
     }
 }
