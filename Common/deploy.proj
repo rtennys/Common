@@ -43,7 +43,7 @@
     </Target>
 
     <Target Name="CreateNuGetPackage">
-        <Exec Command='.nuget\NuGet pack $(NuspecFilename) -Verbose -BasePath "$(NuGetTempDirectory)" -Version "$(Version)" -OutputDirectory "$(NuGetTempDirectory)"' />
+        <Exec Command='.nuget\NuGet pack $(NuspecFilename) -Verbosity "detailed" -BasePath "$(NuGetTempDirectory)" -Version "$(Version)" -OutputDirectory "$(NuGetTempDirectory)"' />
     </Target>
 
     <Target Name="DeployNuGetPackage" Condition="!$(SkipDeployAndCleanup)">
