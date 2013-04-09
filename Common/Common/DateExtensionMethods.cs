@@ -83,7 +83,7 @@ namespace Common
         }
 
         /// <summary>Raw switching of the kind... no time conversion</summary>
-        public static DateTime Local(this DateTime date, DateTimeKind kind = DateTimeKind.Utc)
+        public static DateTime Local(this DateTime date)
         {
             return date.ToKind(DateTimeKind.Local);
         }
