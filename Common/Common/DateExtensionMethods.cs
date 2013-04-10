@@ -105,6 +105,11 @@ namespace Common
             return dateTimeOffset.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffffffZ");
         }
 
+        public static string ToIso8601String(this TimeSpan timeSpan)
+        {
+            return timeSpan.ToString("HH:mm:ss.fffffffZ");
+        }
+
 
         public static string ToRelativeString(this DateTimeOffset date)
         {
