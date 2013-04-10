@@ -32,7 +32,7 @@
 
     <Target Name="PrepareForNuGet">
         <ItemGroup>
-            <sourceFiles Include="$(ProjectFolder)\**\*.cs" Exclude="**\AssemblyInfo.cs" />
+            <sourceFiles Include="$(ProjectFolder)\**\*.cs" Exclude="**\AssemblyInfo.cs;**\TemporaryGenerated*" />
         </ItemGroup>
         <ItemGroup>
             <destinationFiles Include="@(sourceFiles->'$(NuGetTempDirectory)\content\$(NamespaceToReplace)\%(RecursiveDir)%(Filename)%(Extension).pp')" />
