@@ -95,6 +95,17 @@ namespace Common
         }
 
 
+        public static string ToIso8601String(this DateTime dateTime)
+        {
+            return dateTime.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffffffZ");
+        }
+
+        public static string ToIso8601String(this DateTimeOffset dateTimeOffset)
+        {
+            return dateTimeOffset.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffffffZ");
+        }
+
+
         public static string ToRelativeString(this DateTimeOffset date)
         {
             var timeSpan = DateTimeOffset.UtcNow.Subtract(date);
