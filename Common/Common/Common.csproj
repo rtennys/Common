@@ -62,6 +62,7 @@
     <Compile Include="Ioc.cs" />
     <Compile Include="DataAccess\IRepository.cs" />
     <Compile Include="JsonHelper.cs" />
+    <Compile Include="LambdaEqualityComparer.cs" />
     <Compile Include="PrincipalExtensions.cs" />
     <Compile Include="TimerHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
