@@ -60,6 +60,7 @@
     <Compile Include="ExtensionMethods\EachTests.cs" />
     <Compile Include="ExtensionMethods\GetDisplayNameTests.cs" />
     <Compile Include="ExtensionMethods\ToDynamicTests.cs" />
+    <Compile Include="LambdaEqualityComparerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -32,5 +32,10 @@ namespace Common
         {
             return first.Union(second, new LambdaEqualityComparer<T>(equals, x => x.GetHashCode()));
         }
+
+        public static IEnumerable<T> Union<T>(this IEnumerable<T> first, IEnumerable<T> second, Func<T, T, bool> equals, Func<T, int> hashCode)
+        {
+            return first.Union(second, new LambdaEqualityComparer<T>(equals, hashCode));
+        }
     }
 }
