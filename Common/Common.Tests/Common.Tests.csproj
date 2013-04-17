@@ -56,6 +56,7 @@
   <ItemGroup>
     <Compile Include="DataAccess\IdGeneratorTests.cs" />
     <Compile Include="DataAccess\InMemoryRepositoryTests.cs" />
+    <Compile Include="DynamicTypeBuilderTests.cs" />
     <Compile Include="EnumHelperTests.cs" />
     <Compile Include="ExtensionMethods\EachTests.cs" />
     <Compile Include="ExtensionMethods\GetDisplayNameTests.cs" />
