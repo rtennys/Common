@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 
@@ -16,6 +15,7 @@ namespace Common
         Type CreateType();
         IDynamicTypeBuilder AddProperty<T>(string propertyName);
         IDynamicTypeBuilder AddProperty(Type propertyType, string propertyName);
+        IDynamicTypeBuilder AddProperty(Type propertyType, string propertyName, Action<PropertyBuilder> callback);
     }
 
     public class DynamicTypeBuilderFactory : IDynamicTypeBuilderFactory
@@ -56,25 +56,31 @@ namespace Common
 
             public IDynamicTypeBuilder AddProperty(Type propertyType, string propertyName)
             {
-                var fieldBuilder = _typeBuilder.DefineField(string.Concat("m_", propertyName), propertyType, FieldAttributes.Private);
-                var propertyMethodAttributes = MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig;
+                return AddProperty(propertyType, propertyName, null);
+            }
 
-                var getterMethod = _typeBuilder.DefineMethod(string.Concat("get_", propertyName), propertyMethodAttributes, propertyType, Type.EmptyTypes);
-                var getterILCode = getterMethod.GetILGenerator();
-                getterILCode.Emit(OpCodes.Ldarg_0);
-                getterILCode.Emit(OpCodes.Ldfld, fieldBuilder);
-                getterILCode.Emit(OpCodes.Ret);
+            public IDynamicTypeBuilder AddProperty(Type propertyType, string propertyName, Action<PropertyBuilder> callback)
+            {
+                var property = _typeBuilder.DefineProperty(propertyName, PropertyAttributes.HasDefault, propertyType, null);
+                var field = _typeBuilder.DefineField(string.Concat("_", propertyName), propertyType, FieldAttributes.Private);
+                var getter = _typeBuilder.DefineMethod(string.Concat("get", propertyName), MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig, propertyType, Type.EmptyTypes);
+                var setter = _typeBuilder.DefineMethod(string.Concat("set", propertyName), MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig, null, new[] {propertyType});
 
-                var setterMethod = _typeBuilder.DefineMethod(string.Concat("set_", propertyName), propertyMethodAttributes, null, new[] {propertyType});
-                var setterILCode = setterMethod.GetILGenerator();
-                setterILCode.Emit(OpCodes.Ldarg_0);
-                setterILCode.Emit(OpCodes.Ldarg_1);
-                setterILCode.Emit(OpCodes.Stfld, fieldBuilder);
-                setterILCode.Emit(OpCodes.Ret);
+                var getterIL = getter.GetILGenerator();
+                getterIL.Emit(OpCodes.Ldarg_0);
+                getterIL.Emit(OpCodes.Ldfld, field);
+                getterIL.Emit(OpCodes.Ret);
 
-                var propertyBuilder = _typeBuilder.DefineProperty(propertyName, PropertyAttributes.HasDefault, propertyType, null);
-                propertyBuilder.SetGetMethod(getterMethod);
-                propertyBuilder.SetSetMethod(setterMethod);
+                var setterIL = setter.GetILGenerator();
+                setterIL.Emit(OpCodes.Ldarg_0);
+                setterIL.Emit(OpCodes.Ldarg_1);
+                setterIL.Emit(OpCodes.Stfld, field);
+                setterIL.Emit(OpCodes.Ret);
+
+                property.SetGetMethod(getter);
+                property.SetSetMethod(setter);
+
+                if (callback != null) callback(property);
 
                 return this;
             }
