@@ -65,6 +65,7 @@
     <Compile Include="JsonHelper.cs" />
     <Compile Include="LambdaEqualityComparer.cs" />
     <Compile Include="PrincipalExtensions.cs" />
+    <Compile Include="ThreadHelper.cs" />
     <Compile Include="TimerHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
