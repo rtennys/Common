@@ -13,6 +13,7 @@ namespace Common
     public interface IDynamicTypeBuilder
     {
         Type CreateType();
+        IDynamicTypeBuilder AddInterface<T>();
         IDynamicTypeBuilder AddProperty<T>(string propertyName);
         IDynamicTypeBuilder AddProperty(Type propertyType, string propertyName);
         IDynamicTypeBuilder AddProperty(Type propertyType, string propertyName, Action<PropertyBuilder> callback);
@@ -49,6 +50,12 @@ namespace Common
                 return _typeBuilder.CreateType();
             }
 
+            public IDynamicTypeBuilder AddInterface<T>()
+            {
+                _typeBuilder.AddInterfaceImplementation(typeof(T));
+                return this;
+            }
+
             public IDynamicTypeBuilder AddProperty<T>(string propertyName)
             {
                 return AddProperty(typeof(T), propertyName);
@@ -63,8 +70,8 @@ namespace Common
             {
                 var property = _typeBuilder.DefineProperty(propertyName, PropertyAttributes.HasDefault, propertyType, null);
                 var field = _typeBuilder.DefineField(string.Concat("_", propertyName), propertyType, FieldAttributes.Private);
-                var getter = _typeBuilder.DefineMethod(string.Concat("get", propertyName), MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig, propertyType, Type.EmptyTypes);
-                var setter = _typeBuilder.DefineMethod(string.Concat("set", propertyName), MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig, null, new[] {propertyType});
+                var getter = _typeBuilder.DefineMethod(string.Concat("get_", propertyName), MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig | MethodAttributes.Virtual, propertyType, Type.EmptyTypes);
+                var setter = _typeBuilder.DefineMethod(string.Concat("set_", propertyName), MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig | MethodAttributes.Virtual, null, new[] { propertyType });
 
                 var getterIL = getter.GetILGenerator();
                 getterIL.Emit(OpCodes.Ldarg_0);

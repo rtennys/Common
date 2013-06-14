@@ -54,5 +54,24 @@ namespace Common.Tests
             Assert.IsNull(instance.StringProperty);
             Assert.AreEqual(0, instance.IntProperty);
         }
+
+        [Test]
+        public void Can_create_implementing_type()
+        {
+            // Arrange
+            var type = _sut.CreateTypeBuilder("MyTestTypeName").AddProperty<string>("StringProperty").AddInterface<DynamicTypeTest>().CreateType();
+
+            // Act
+            var instance = (DynamicTypeTest)Activator.CreateInstance(type);
+            instance.StringProperty = "test";
+
+            // Assert
+            Assert.AreEqual("test", instance.StringProperty);
+        }
+
+        public interface DynamicTypeTest
+        {
+            string StringProperty { get; set; }
+        }
     }
 }
