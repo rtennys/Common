@@ -8,22 +8,30 @@ namespace Common
 {
     public static class ThreadHelper
     {
-        public static string GetClaim(string claimType)
+        public static IPrincipal CurrentPrincipal()
         {
             var context = HttpContext.Current;
-            return context != null ? context.User.Get(claimType) : Thread.CurrentPrincipal.Get(claimType);
+            return context != null ? context.User : Thread.CurrentPrincipal;
+        }
+
+        public static bool IsAuthenticated()
+        {
+            return CurrentPrincipal().Identity.IsAuthenticated;
+        }
+
+        public static string GetClaim(string claimType)
+        {
+            return CurrentPrincipal().Get(claimType);
         }
 
         public static T GetClaim<T>(string claimType)
         {
-            var context = HttpContext.Current;
-            return context != null ? context.User.Get<T>(claimType) : Thread.CurrentPrincipal.Get<T>(claimType);
+            return CurrentPrincipal().Get<T>(claimType);
         }
 
         public static IReadOnlyList<string> GetAllClaims(string claimType)
         {
-            var context = HttpContext.Current;
-            return context != null ? context.User.GetAll(claimType) : Thread.CurrentPrincipal.GetAll(claimType);
+            return CurrentPrincipal().GetAll(claimType);
         }
 
         public static void RunAs(IPrincipal principal, Action action)
