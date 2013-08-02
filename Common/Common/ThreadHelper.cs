@@ -50,6 +50,8 @@ namespace Common
 
             try
             {
+                principal = principal ?? new GenericPrincipal(new GenericIdentity(""), new string[0]);
+
                 Thread.CurrentPrincipal = principal;
                 if (HttpContext.Current != null) HttpContext.Current.User = principal;
 
